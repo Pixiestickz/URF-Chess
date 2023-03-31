@@ -1,15 +1,28 @@
+from flask import Flask, render_template
 import pygame
-from flask import Flask
 
+#initialize flask object named app
 app = Flask(__name__)
 
-@app.route('/')
+#Set the size of the window
+WINDOW_SIZE = (600,600)
 
+#Initialize pygame
+pygame.init()
+
+#Create a pygame window
+screen = pygame.display.set_mode(WINDOW_SIZE)
+
+#Set the caption of the window
+pygame.display.set_caption("URF Chess")
+
+@app.route("/")
 def index():
-    return "hello world!"
+    return render_template("index.html")
 
-# We can disable debug mode in production environments to disable security issues
+@app.route("/game")
+def game():
+    return render_template("game.html")
+
 if __name__ == "__main__":
-    app.run(debug = True)
-
-
+    app.run(debug=True)
