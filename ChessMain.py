@@ -95,14 +95,53 @@ def main():
     #Grabs GameState constructor and loads in images
     gs = ChessEngine.GameState()
     loadImages()
-    
+
+    #tuple variable to store user clicked location (row, col)
+    sqSelected = ()  
+    #History of player clicks; contains two tuples 
+    playerClicks = [] #Ex: [(6,4), (4,4)] v
+
     #While loop
     running = True
     while running:
         for e in p.event.get():
             if e.type == p.QUIT:
                 running = False
-        
+            
+            #Event for clicks
+            elif (e.type == p.MOUSEBUTTONDOWN):
+                #keeps track of coords (x,y)
+                location = p.mouse.get_pos()
+                col = location[0] // SQ_SIZE #round down for integers
+                row = location[1] // SQ_SIZE #round down for integers
+
+                #Handles whether a tile is selected before selecting
+                if sqSelected == (row, col):
+                    #If a square is already selected
+                    sqSelected = () #we clear it out, essentially "unselecting" the tile
+                    playerClicks = [] #clear player clicks as well
+
+                else:
+                    #Store the selected tile and append it to our history of clicks
+                    sqSelected = (row, col)
+                    playerClicks.append(sqSelected)
+
+                #Determine if this was the second click; "moving a piece"
+                if (len(playerClicks) == 2):
+                    '''
+                    Create move object 
+                        calls ChessEngine's Move class
+                            passes in initial click square and second click square
+                            passes in current game state of the board 
+                    '''
+                    move = ChessEngine.Move(playerClicks[0], playerClicks[1], gs.board)
+                    print(move.chessNotation()) #prints chess notation
+                    gs.makeMove(move) #creates the move
+
+                    #Clear our selected squares and clicks for next move
+                    sqSelected = () 
+                    playerClicks = []
+
         #Lock in our max FPS 
         drawGameState(screen, gs)
         clock.tick(MAX_FPS)
