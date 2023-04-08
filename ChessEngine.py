@@ -27,6 +27,10 @@ class GameState():
         self.whiteToMove = True
         self.moveLog = []
 
+    '''
+    takes move as a parameter and executes it
+        Doesn't take into account: castling, pawn promotion, en-passant
+    '''
     def makeMove(self, move):
         #Take piece from starting location and move it to ending location
         self.board[move.startPOS[0]][move.startPOS[1]] = "--"
@@ -35,7 +39,23 @@ class GameState():
 
         #Switch the players turn
         self.whiteToMove = not self.whiteToMove 
-        
+
+    '''
+    Undo the last move made
+    ''' 
+    def undoMove(self):
+        #Ensure that there's a move to undo
+        if len(self.moveLog) != 0:
+            #remove the most recent move from the move log; popping since we're ammending
+            move = self.moveLog.pop()
+
+            #After the most recent move was removed, we want to revert any changes
+            self.board[move.startPOS[0]][move.startPOS[1]] = move.pieceMoved
+            self.board[move.endPOS[0]][move.endPOS[1]] = move.pieceCaptured
+
+            #Revert who's turn it is
+            self.whiteToMove = not self.whiteToMove
+
 class Move():
     """
     Converts to chess notation and vice versa

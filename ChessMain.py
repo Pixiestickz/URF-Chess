@@ -108,7 +108,7 @@ def main():
             if e.type == p.QUIT:
                 running = False
             
-            #Event for clicks
+            #Event for mouse clicks
             elif (e.type == p.MOUSEBUTTONDOWN):
                 #keeps track of coords (x,y)
                 location = p.mouse.get_pos()
@@ -141,6 +141,13 @@ def main():
                     #Clear our selected squares and clicks for next move
                     sqSelected = () 
                     playerClicks = []
+
+            #Check if we're going to undo the move
+            elif e.type == p.KEYDOWN:
+                #Undoes the move if the user presses "z"
+                if e.key == p.K_z: 
+                    gs.undoMove()
+                    
 
         #Lock in our max FPS 
         drawGameState(screen, gs)
