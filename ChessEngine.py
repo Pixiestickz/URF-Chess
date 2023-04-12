@@ -56,6 +56,46 @@ class GameState():
             #Revert who's turn it is
             self.whiteToMove = not self.whiteToMove
 
+    '''
+    All moves not considering checks
+    '''
+    def getAllPossibleMoves(self):
+        #Empty list of moves
+        moves = []
+
+        #search entire board
+        for r in range(len(self.board)):
+            for c in range(len(self.board[r])):
+                #Generates current turn using the first character 
+                #Example: bK -> "b" | wQ -> "w"
+                turn = self.board[r][c][0]
+                
+                #Check for proper turns
+                if (turn == 'w' and self.whiteToMove) and (turn == 'b' and not self.whiteToMove):
+                    #Grab the piece using the second character
+                    #Example: bK -> "K" | wQ -> "Q"
+                    piece = self.borard[r][c][1]
+
+                    '''
+                    Sort logic by piece
+                    '''
+                    #Pawn moves
+                    if piece == 'p':
+                        self.getAllPossibleMoves(r,c,moves)
+                    
+                    #rook moves
+                    elif piece == 'R':
+                        self.getRookMoves(r,c,moves)
+                    
+
+
+    '''
+    All moves considering checks
+    '''
+    def getValidMoves(self):
+        #Take into consideration valid moves first
+        return self.getAllPossibleMoves()
+
 class Move():
     """
     Converts to chess notation and vice versa
