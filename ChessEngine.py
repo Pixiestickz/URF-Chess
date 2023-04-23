@@ -86,8 +86,20 @@ class GameState():
                     #rook moves
                     elif piece == 'R':
                         self.getRookMoves(r,c,moves)
-                    
 
+        return moves
+
+    '''
+    Pawn moves
+    '''
+    def getPawnMoves(self, r, c, moves):
+        pass
+
+    '''
+    Rook moves
+    '''
+    def getRookMoves(self, r, c, moves):
+        pass
 
     '''
     All moves considering checks
@@ -124,6 +136,34 @@ class Move():
         self.endPOS = endPOS
         self.pieceMoved = board[startPOS[0]][startPOS[1]]
         self.pieceCaptured = board[endPOS[0]][endPOS[1]]
+
+        '''
+        Unique ID for each move:
+            1000 (starting row)
+            100 (starting col)
+            10 (ending row)
+            1 (ending col)
+        
+            EX:
+                7543
+                    Starting row = 7
+                    Starting col = 5
+                    ending row = 4
+                    ending col = 3
+        '''
+        self.moveID = (1000* self.startPOS[0]) + (100 * self.startPOS[1]) + (10 * self.endPOS[0]) + self.endPOS[1]
+        print(self.moveID)
+
+    '''
+    Overriding the equals method in order to properly compare objects
+    '''
+    def __eq__(self, other):
+        if isinstance(other, Move):
+            #Only need to compare moveIDs
+            return self.moveID == other.moveID
+        
+        return False
+    
 
 
     def chessNotation(self):

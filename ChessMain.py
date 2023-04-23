@@ -96,6 +96,15 @@ def main():
     gs = ChessEngine.GameState()
     loadImages()
 
+    #Generate all valid moves
+    validMoves = gs.getValidMoves()
+    moveMade = False #Flag for when a move is made 
+    '''
+    Can optimize by "preselecting" valid moves and only updating when piece is moved
+    '''
+
+    
+
     #tuple variable to store user clicked location (row, col)
     sqSelected = ()  
     #History of player clicks; contains two tuples 
@@ -136,7 +145,11 @@ def main():
                     '''
                     move = ChessEngine.Move(playerClicks[0], playerClicks[1], gs.board)
                     print(move.chessNotation()) #prints chess notation
-                    gs.makeMove(move) #creates the move
+
+                    #Checks to see if the move was valid or not
+                    if move in validMoves:
+                        gs.makeMove(move) #creates the move
+                        moveMade = True #Toggle moveMade to true
 
                     #Clear our selected squares and clicks for next move
                     sqSelected = () 
@@ -147,8 +160,14 @@ def main():
                 #Undoes the move if the user presses "z"
                 if e.key == p.K_z: 
                     gs.undoMove()
+                    moveMade = True 
                     
 
+        #check to see if a move was made
+        if moveMade:
+            #Generate a new set of validMoves
+            validMoves = gs.getValidMoves
+            moveMade = False #Move already accounted for; reset to false for next loop
         #Lock in our max FPS 
         drawGameState(screen, gs)
         clock.tick(MAX_FPS)
